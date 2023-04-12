@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:recipe_app_flutter/api/model/recipe_details.dart';
 
 part 'app_state.freezed.dart';
 
@@ -9,6 +10,7 @@ class AppState with _$AppState {
   factory AppState({
     //TODO: this will be removed
     @Default('') String sample,
+    @Default(<RecipeDetails>[]) List<RecipeDetails> recipeDetails,
   }) = _AppState;
 
   factory AppState.fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);

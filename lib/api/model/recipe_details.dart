@@ -1,18 +1,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'recipe.freezed.dart';
+part 'recipe_details.freezed.dart';
 
-part 'recipe.g.dart';
+part 'recipe_details.g.dart';
 
 @freezed
-class Recipe with _$Recipe {
+class RecipeDetails with _$RecipeDetails {
   //TODO: model to be modified
-  factory Recipe({
+  factory RecipeDetails({
     @JsonKey(name: 'idMeal') required String id,
     @JsonKey(name: 'strMeal') required String name,
     @JsonKey(name: 'strCategory') required String category,
     @JsonKey(name: 'strMealThumb') required String imageUrl,
-  }) = _Recipe;
+  }) = _RecipeDetails;
 
-  factory Recipe.fromJson(Map<String, dynamic> json) => _$RecipeFromJson(json);
+  factory RecipeDetails.fromJson(Map<String, dynamic> json) => _$RecipeDetailsFromJson(json);
 }
