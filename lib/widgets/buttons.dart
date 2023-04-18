@@ -20,7 +20,7 @@ class LargeButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      onPressed: () => onPressed,
+      onPressed: onPressed,
       child: Text(label),
     );
   }

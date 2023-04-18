@@ -1,6 +1,7 @@
 const onboardingImageBg = 'assets/img/onboarding.jpeg';
+const avatarImage = 'assets/img/avatar.jpg';
 
-List<String> recipes = [
+List<String> listedRecipes = [
   'Sushi',
   'Fettuccine Alfredo',
   'Ratatouille',
@@ -21,3 +22,5 @@ List<String> recipes = [
   'Wontons',
   'Tonkatsu pork',
 ];
+
+const String errorMessage = 'Something went wrong!';

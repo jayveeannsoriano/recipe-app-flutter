@@ -1,3 +1,4 @@
+import 'package:recipe_app_flutter/features/recipe_overview_page/recipe_overview_connector.dart';
 import 'package:recipe_app_flutter/utils/colors.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 import 'package:recipe_app_flutter/widgets/buttons.dart';
@@ -74,7 +75,7 @@ class OnboardingPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(13.0),
                     child: LargeButton(
-                      onPressed: () {},
+                      onPressed: () => _navigateToRecipeOverviewPage(context),
                       label: 'Get Started',
                     ),
                   )
@@ -83,6 +84,14 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _navigateToRecipeOverviewPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const RecipeOverviewConnector(),
       ),
     );
   }
