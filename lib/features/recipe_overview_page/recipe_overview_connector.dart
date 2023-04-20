@@ -13,7 +13,12 @@ class RecipeOverviewConnector extends StatelessWidget {
     return StoreConnector<AppState, RecipeOverviewVm>(
       vm: () => RecipeOverviewVmFactory(),
       onInit: (store) => store.dispatchAsync(GetRecipesAction()),
-      builder: (context, vm) => RecipeOverviewPage(recipes: vm.recipes),
+      builder: (context, vm) => RecipeOverviewPage(
+        recipes: vm.recipes,
+        searchRecipes: vm.searchRecipes,
+        onSearchRecipes: vm.onSearchRecipes,
+        onClearSearchedRecipes: vm.onClearSearchedRecipes,
+      ),
     );
   }
 }

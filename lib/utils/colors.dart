@@ -20,3 +20,5 @@ const backgroundColor = Colors.white;
 const foregroundColor = Colors.white;
 Color? searchbarColor = Colors.grey[200];
 Color? searchbarHintTextColor = Colors.black38;
+const iconBgColor = Color(0xFFDFB613);
+const iconColor = Colors.white;
