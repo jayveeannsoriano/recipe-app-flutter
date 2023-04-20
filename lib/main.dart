@@ -1,4 +1,4 @@
-import 'package:recipe_app_flutter/features/recipe_overview_page/recipe_overview_page.dart';
+import 'package:recipe_app_flutter/features/onboarding_page/onboarding_page.dart';
 import 'package:recipe_app_flutter/utils/app_theme.dart';
 import 'package:recipe_app_flutter/state/app_state.dart';
 import 'package:async_redux/async_redux.dart';
@@ -15,7 +15,7 @@ void main() async {
     StoreProvider(
       store: store,
       child: MaterialApp(
-        home: const RecipeOverviewPage(),
+        home: const OnboardingPage(),
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
       ),
