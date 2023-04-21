@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:recipe_app_flutter/api/model/recipes.dart';
-import 'package:recipe_app_flutter/features/recipe_overview_page/widgets/recipe_card.dart';
+import 'package:recipe_app_flutter/features/recipe_overview_page/widgets/recipe_list_view.dart';
 import 'package:recipe_app_flutter/features/recipe_overview_page/widgets/searchbar.dart';
 import 'package:recipe_app_flutter/utils/async.dart';
 import 'package:recipe_app_flutter/utils/colors.dart';
@@ -7,13 +9,53 @@ import 'package:recipe_app_flutter/utils/constants.dart';
 import 'package:recipe_app_flutter/widgets/spacings.dart';
 import 'package:flutter/material.dart';
 
-class RecipeOverviewPage extends StatelessWidget {
+class RecipeOverviewPage extends StatefulWidget {
   const RecipeOverviewPage({
     required this.recipes,
+    required this.searchRecipes,
+    required this.onSearchRecipes,
+    required this.onClearSearchedRecipes,
     super.key,
   });
 
   final Async<List<Recipes>> recipes;
+  final List<Recipes> searchRecipes;
+  final ValueChanged<String> onSearchRecipes;
+  final VoidCallback onClearSearchedRecipes;
+
+  @override
+  State<RecipeOverviewPage> createState() => _RecipeOverviewPageState();
+}
+
+class _RecipeOverviewPageState extends State<RecipeOverviewPage> {
+  late TextEditingController _searchbarController;
+  late bool isSearching;
+  late String title;
+  Timer? _debounceTimer;
+  bool _showFloatingActionButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _searchbarController = TextEditingController()
+      ..addListener(() {
+        _onSearchRecipes();
+        _onTextChanged();
+      });
+
+    isSearching = false;
+    title = 'Your Recipes';
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _searchbarController.dispose();
+    widget.onClearSearchedRecipes();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +92,10 @@ class RecipeOverviewPage extends StatelessWidget {
                   ],
                 ),
                 const VerticalSpacing(spacing: 40.0),
-                //TODO: searchbar functionality to be implemented
-                const SearchBar(),
+                Searchbar(
+                  controller: _searchbarController,
+                  onClear: _clearSearchbarField,
+                ),
                 const VerticalSpacing(spacing: 30.0),
                 Row(
                   children: [
@@ -60,7 +104,7 @@ class RecipeOverviewPage extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Your Recipes',
+                            title,
                             style: Theme.of(context).textTheme.headline6?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -71,32 +115,63 @@ class RecipeOverviewPage extends StatelessWidget {
                   ],
                 ),
                 Expanded(
-                  child: recipes.when(
-                    (data) => ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: ((_, index) {
-                        final recipe = data[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: RecipeCard(recipe: recipe),
-                        );
-                      }),
-                    ),
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: ((errorMessage) => Center(
-                          child: Text(errorMessage!),
-                        )),
-                  ),
+                  child: isSearching
+                      ? RecipeListView(
+                          recipeList: widget.searchRecipes,
+                          shouldShowFallback: true,
+                        )
+                      : widget.recipes.when(
+                          (data) => RecipeListView(
+                            recipeList: data,
+                            shouldShowFallback: false,
+                          ),
+                          loading: () => const Center(child: CircularProgressIndicator()),
+                          error: (errorMessage) => Center(
+                            child: Text(errorMessage!),
+                          ),
+                        ),
                 )
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+      floatingActionButton: Visibility(
+        visible: _showFloatingActionButton,
+        child: FloatingActionButton(
+          //TODO: add new recipe/meal functionality to be implemented
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
+  }
+
+  void _clearSearchbarField() {
+    _searchbarController.clear();
+    widget.onClearSearchedRecipes();
+    setState(() {
+      isSearching = false;
+      title = 'Your Recipes';
+    });
+  }
+
+  void _onSearchRecipes() {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(seconds: 1), _searchRecipes);
+  }
+
+  void _searchRecipes() {
+    if (_searchbarController.text.isNotEmpty) {
+      widget.onSearchRecipes(_searchbarController.text);
+      setState(() {
+        isSearching = true;
+        title = 'Your Results';
+      });
+    }
+  }
+
+  void _onTextChanged() {
+    setState(() => _showFloatingActionButton = _searchbarController.text.isEmpty);
   }
 }

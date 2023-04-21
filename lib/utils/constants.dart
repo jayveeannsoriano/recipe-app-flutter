@@ -1,5 +1,6 @@
 const onboardingImageBg = 'assets/img/onboarding.jpeg';
 const avatarImage = 'assets/img/avatar.jpg';
+const searchFallbackImage = 'assets/img/make-it-your-own-way.svg';
 
 List<String> listedRecipes = [
   'Sushi',

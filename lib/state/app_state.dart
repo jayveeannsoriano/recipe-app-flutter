@@ -11,6 +11,7 @@ part 'app_state.g.dart';
 class AppState with _$AppState {
   factory AppState({
     @Default(<Recipes>[]) List<Recipes> recipes,
+    @Default(<Recipes>[]) List<Recipes> searchRecipes,
     @Default(null) RecipeDetails? recipeDetails,
 
     //ignored by state
